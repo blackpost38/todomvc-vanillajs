@@ -44,6 +44,14 @@
 		self.view.bind('toggleAll', function (status) {
 			self.toggleAll(status.completed);
 		});
+
+		self.view.bind('login', function () {
+			self.login();
+		});
+
+		self.view.bind('logout', function () {
+			self.logout();
+		});
 	}
 
 	/**
@@ -227,6 +235,34 @@
 		});
 	};
 
+	Controller.prototype.login = function () {
+		var self = this;
+		FB.login(function(response) {
+			if (response.authResponse) {
+				console.log('Welcome!  Fetching your information.... ');
+				self.view.render('showAuthButton', {status: response.status});
+			} else {
+				console.log('User cancelled login or did not fully authorize.');
+			}
+		})
+	};
+
+	Controller.prototype.logout = function () {
+		var self = this;
+		FB.logout(function(response) {
+			console.log('user is now logged out.');
+			self.view.render('showAuthButton', {status: response.status});
+		});
+	};
+
+	Controller.prototype.showAuthButton = function () {
+		// state 확인 후 login 버튼 혹은 logout 버튼을 숨긴다.
+		var self = this;
+		FB.getLoginStatus(function(response) {
+			self.view.render('showAuthButton', {status: response.status});
+    });
+	};
+
 	/**
 	 * Re-filters the todo items, based on the active route.
 	 * @param {boolean|undefined} force  forces a re-painting of todo items.
@@ -263,6 +299,27 @@
 
 		this.view.render('setFilter', currentPage);
 	};
+
+	// /**
+	//  * Check login state and then call callback
+	//  */
+	// Controller.prototype.checkLoginState = function () {
+	// 	var self = this;
+	// 	FB.getLoginStatus(function(response) {
+	// 		self._statusChangeCallback(response);
+	// 	});
+	// };
+
+	// /**
+	//  * Execute logic depends on login state
+	//  */
+	// Controller.prototype._statusChangeCallback = function (response) {
+	// 	if ({status: response.status} === 'connected') {
+	// 		console.log('Welcome!  Fetching your information.... ');
+	// 	} else {
+	// 		console.log('Please log into this app.');
+	// 	}
+	// }
 
 	// Export to window
 	window.app = window.app || {};

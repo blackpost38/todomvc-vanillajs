@@ -25,6 +25,8 @@
 		this.$footer = qs('.footer');
 		this.$toggleAll = qs('.toggle-all');
 		this.$newTodo = qs('.new-todo');
+		this.$login = qs('.login');
+		this.$logout = qs('.logout');
 	}
 
 	View.prototype._removeItem = function (id) {
@@ -127,6 +129,15 @@
 			},
 			editItemDone: function () {
 				self._editItemDone(parameter.id, parameter.title);
+			},
+			showAuthButton: function () {
+				if (parameter.status === 'connected') {
+					self.$login.style.display = 'none';
+					self.$logout.style.display = 'inline';
+				} else {
+					self.$login.style.display = 'inline';
+					self.$logout.style.display = 'none';
+				}
 			}
 		};
 
@@ -210,6 +221,14 @@
 
 		} else if (event === 'itemEditCancel') {
 			self._bindItemEditCancel(handler);
+		} else if (event === 'login') {
+			$on(self.$login, 'click', function () {
+				handler();
+			});
+		} else if (event === 'logout') {
+			$on(self.$logout, 'click', function () {
+				handler();
+			});
 		}
 	};
 

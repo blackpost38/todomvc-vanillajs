@@ -5,8 +5,13 @@
 		<title>VanillaJS • TodoMVC</title>
 		<link rel="stylesheet" href="node_modules/todomvc-common/base.css">
 		<link rel="stylesheet" href="node_modules/todomvc-app-css/index.css">
+		<link rel="stylesheet" href="index.css">
 	</head>
 	<body>
+		<section class="auth">
+			<button class="login">Log In</button>
+			<button class="logout">Log Out</button>
+		</section>
 		<section class="todoapp">
 			<header class="header">
 				<h1>todos</h1>
@@ -46,5 +51,15 @@
 		<script src="js/view.js"></script>
 		<script src="js/controller.js"></script>
 		<script src="js/app.js"></script>
+		<script>
+			// Load facdebook sdk async
+			(function(d, s, id) {
+				var js, fjs = d.getElementsByTagName(s)[0];
+				if (d.getElementById(id)) return;
+				js = d.createElement(s); js.id = id;
+				js.src = "https://connect.facebook.net/ko_KR/sdk.js#xfbml=1&version=v2.12&appId=157707321242113&autoLogAppEvents=1";
+				fjs.parentNode.insertBefore(js, fjs);
+			}(document, 'script', 'facebook-jssdk'));
+		</script>
 	</body>
 </html>

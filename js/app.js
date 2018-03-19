@@ -22,4 +22,14 @@
 	}
 	$on(window, 'load', setView);
 	$on(window, 'hashchange', setView);
+
+	window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '346242342538945',
+      cookie     : true,
+      xfbml      : true,
+      version    : 'v2.8'
+		});
+		todo.controller.showAuthButton();
+  };
 })();
