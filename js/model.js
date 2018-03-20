@@ -114,6 +114,10 @@
 		});
 	};
 
+	Model.prototype.updateUserId = function (userId, callback) {
+		this.storage.updateUserId(userId, callback);
+	};
+
 	// Export to window
 	window.app = window.app || {};
 	window.app.Model = Model;

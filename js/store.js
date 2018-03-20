@@ -11,15 +11,14 @@
 	 * real life you probably would be making AJAX calls
 	 */
 	function Store(name, callback) {
+		this._userId = '';
+
 		callback = callback || function () {};
 
 		this._dbName = name;
 
 		if (!localStorage[name]) {
-			var data = {
-				todos: []
-			};
-
+			var data = {};
 			localStorage[name] = JSON.stringify(data);
 		}
 
@@ -44,7 +43,7 @@
 			return;
 		}
 
-		var todos = JSON.parse(localStorage[this._dbName]).todos;
+		var todos = JSON.parse(localStorage[this._dbName])[this._userId];
 
 		callback.call(this, todos.filter(function (todo) {
 			for (var q in query) {
@@ -63,7 +62,11 @@
 	 */
 	Store.prototype.findAll = function (callback) {
 		callback = callback || function () {};
-		callback.call(this, JSON.parse(localStorage[this._dbName]).todos);
+		if (!this._userId) {
+			callback.call(this, []);
+		} else {
+			callback.call(this, JSON.parse(localStorage[this._dbName])[this._userId]);
+		}
 	};
 
 	/**
@@ -76,7 +79,7 @@
 	 */
 	Store.prototype.save = function (updateData, callback, id) {
 		var data = JSON.parse(localStorage[this._dbName]);
-		var todos = data.todos;
+		var todos = data[this._userId];
 
 		callback = callback || function () {};
 
@@ -111,7 +114,7 @@
 	 */
 	Store.prototype.remove = function (id, callback) {
 		var data = JSON.parse(localStorage[this._dbName]);
-		var todos = data.todos;
+		var todos = data[this._userId];
 
 		for (var i = 0; i < todos.length; i++) {
 			if (todos[i].id == id) {
@@ -130,9 +133,22 @@
 	 * @param {function} callback The callback to fire after dropping the data
 	 */
 	Store.prototype.drop = function (callback) {
-		var data = {todos: []};
+		var data = JSON.parse(localStorage[this._dbName]);
+		data[this._userId] = [];
 		localStorage[this._dbName] = JSON.stringify(data);
-		callback.call(this, data.todos);
+		callback.call(this, data[this._userId]);
+	};
+
+	Store.prototype.updateUserId = function (userId, callback) {
+		this._userId = userId;
+		var data = JSON.parse(localStorage[this._dbName]);
+		if (!data[this._userId]) {
+			data[this._userId] = [];
+		}
+		localStorage[this._dbName] = JSON.stringify(data);
+
+		callback = callback || function () {};
+		callback.call(this, []);
 	};
 
 	// Export to window

@@ -30,6 +30,6 @@
       xfbml      : true,
       version    : 'v2.8'
 		});
-		todo.controller.showAuthButton();
+		todo.controller.updateUserId();
   };
 })();

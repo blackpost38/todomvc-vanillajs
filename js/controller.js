@@ -240,7 +240,11 @@
 		FB.login(function(response) {
 			if (response.authResponse) {
 				console.log('Welcome!  Fetching your information.... ');
-				self.view.render('showAuthButton', {status: response.status});
+				var status = response.status;
+				self.model.updateUserId(response.authResponse.userID, function () {
+					self.view.render('showAuthButton', {status: status});
+					self._filter(true);
+				});
 			} else {
 				console.log('User cancelled login or did not fully authorize.');
 			}
@@ -251,15 +255,25 @@
 		var self = this;
 		FB.logout(function(response) {
 			console.log('user is now logged out.');
-			self.view.render('showAuthButton', {status: response.status});
+			var status = response.status;
+			self.model.updateUserId('', function () {
+				self.view.render('showAuthButton', {status: response.status});
+				self._filter(true);
+			});
 		});
 	};
 
-	Controller.prototype.showAuthButton = function () {
-		// state 확인 후 login 버튼 혹은 logout 버튼을 숨긴다.
+	Controller.prototype.updateUserId = function () {
 		var self = this;
 		FB.getLoginStatus(function(response) {
-			self.view.render('showAuthButton', {status: response.status});
+			if (response.authResponse) {
+				self.model.updateUserId(response.authResponse.userID, function () {
+					self.view.render('showAuthButton', {status: response.status});
+					self._filter(true);
+				});
+			} else {
+				self.view.render('showAuthButton', {status: response.status});
+			}
     });
 	};
 
@@ -299,27 +313,6 @@
 
 		this.view.render('setFilter', currentPage);
 	};
-
-	// /**
-	//  * Check login state and then call callback
-	//  */
-	// Controller.prototype.checkLoginState = function () {
-	// 	var self = this;
-	// 	FB.getLoginStatus(function(response) {
-	// 		self._statusChangeCallback(response);
-	// 	});
-	// };
-
-	// /**
-	//  * Execute logic depends on login state
-	//  */
-	// Controller.prototype._statusChangeCallback = function (response) {
-	// 	if ({status: response.status} === 'connected') {
-	// 		console.log('Welcome!  Fetching your information.... ');
-	// 	} else {
-	// 		console.log('Please log into this app.');
-	// 	}
-	// }
 
 	// Export to window
 	window.app = window.app || {};
