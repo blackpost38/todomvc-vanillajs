@@ -217,6 +217,49 @@
 		self._filter();
 	};
 
+	Controller.prototype.login = function () {
+		var self = this;
+		FB.login(function(response) {
+			if (response.authResponse) {
+				console.log('Welcome!  Fetching your information.... ');
+				var status = response.status;
+				self.model.updateUserId(response.authResponse.userID, function () {
+					self.view.render('authContentVisibility', {status: status});
+					self._filter(true);
+				});
+			} else {
+				console.log('User cancelled login or did not fully authorize.');
+			}
+		})
+	};
+
+	Controller.prototype.logout = function () {
+		var self = this;
+		FB.logout(function(response) {
+			console.log('user is now logged out.');
+			var status = response.status;
+			self.model.updateUserId('', function () {
+				self.view.render('authContentVisibility', {status: status});
+				self._filter(true);
+			});
+		});
+	};
+
+	Controller.prototype.updateUserId = function () {
+		var self = this;
+		FB.getLoginStatus(function(response) {
+			var status = response.status;
+			if (response.authResponse) {
+				self.model.updateUserId(response.authResponse.userID, function () {
+					self.view.render('authContentVisibility', {status: status});
+					self._filter(true);
+				});
+			} else {
+				self.view.render('authContentVisibility', {status: status});
+			}
+    });
+	};
+
 	/**
 	 * Updates the pieces of the page which change depending on the remaining
 	 * number of todos.
@@ -233,52 +276,6 @@
 			self.view.render('toggleAll', {checked: todos.completed === todos.total});
 			self.view.render('contentBlockVisibility', {visible: todos.total > 0});
 		});
-	};
-
-	Controller.prototype.login = function () {
-		var self = this;
-		FB.login(function(response) {
-			if (response.authResponse) {
-				console.log('Welcome!  Fetching your information.... ');
-				var status = response.status;
-				self.model.updateUserId(response.authResponse.userID, function () {
-					self.view.render('showAuthButton', {status: status});
-					self.view.render('newTodoVisibility', {status: response.status});
-					self._filter(true);
-				});
-			} else {
-				console.log('User cancelled login or did not fully authorize.');
-			}
-		})
-	};
-
-	Controller.prototype.logout = function () {
-		var self = this;
-		FB.logout(function(response) {
-			console.log('user is now logged out.');
-			var status = response.status;
-			self.model.updateUserId('', function () {
-				self.view.render('showAuthButton', {status: response.status});
-				self.view.render('newTodoVisibility', {status: response.status});
-				self._filter(true);
-			});
-		});
-	};
-
-	Controller.prototype.updateUserId = function () {
-		var self = this;
-		FB.getLoginStatus(function(response) {
-			if (response.authResponse) {
-				self.model.updateUserId(response.authResponse.userID, function () {
-					self.view.render('showAuthButton', {status: response.status});
-					self.view.render('newTodoVisibility', {status: response.status});
-					self._filter(true);
-				});
-			} else {
-				self.view.render('showAuthButton', {status: response.status});
-				self.view.render('newTodoVisibility', {status: response.status});
-			}
-    });
 	};
 
 	/**

@@ -131,20 +131,15 @@
 			editItemDone: function () {
 				self._editItemDone(parameter.id, parameter.title);
 			},
-			showAuthButton: function () {
+			authContentVisibility: function () {
 				if (parameter.status === 'connected') {
 					self.$login.style.display = 'none';
 					self.$logout.style.display = 'inline';
-				} else {
-					self.$login.style.display = 'inline';
-					self.$logout.style.display = 'none';
-				}
-			},
-			newTodoVisibility: function () {
-				if (parameter.status === 'connected') {
 					self.$newTodo.style.display = 'inline-block';
 					self.$description.style.display = 'none';
 				} else {
+					self.$login.style.display = 'inline';
+					self.$logout.style.display = 'none';
 					self.$newTodo.style.display = 'none';
 					self.$description.style.display = 'block';
 				}
