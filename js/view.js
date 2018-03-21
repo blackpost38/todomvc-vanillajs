@@ -27,6 +27,7 @@
 		this.$newTodo = qs('.new-todo');
 		this.$login = qs('.login');
 		this.$logout = qs('.logout');
+		this.$description = qs('.description');
 	}
 
 	View.prototype._removeItem = function (id) {
@@ -137,6 +138,15 @@
 				} else {
 					self.$login.style.display = 'inline';
 					self.$logout.style.display = 'none';
+				}
+			},
+			newTodoVisibility: function () {
+				if (parameter.status === 'connected') {
+					self.$newTodo.style.display = 'inline-block';
+					self.$description.style.display = 'none';
+				} else {
+					self.$newTodo.style.display = 'none';
+					self.$description.style.display = 'block';
 				}
 			}
 		};

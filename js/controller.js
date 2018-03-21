@@ -243,6 +243,7 @@
 				var status = response.status;
 				self.model.updateUserId(response.authResponse.userID, function () {
 					self.view.render('showAuthButton', {status: status});
+					self.view.render('newTodoVisibility', {status: response.status});
 					self._filter(true);
 				});
 			} else {
@@ -258,6 +259,7 @@
 			var status = response.status;
 			self.model.updateUserId('', function () {
 				self.view.render('showAuthButton', {status: response.status});
+				self.view.render('newTodoVisibility', {status: response.status});
 				self._filter(true);
 			});
 		});
@@ -269,10 +271,12 @@
 			if (response.authResponse) {
 				self.model.updateUserId(response.authResponse.userID, function () {
 					self.view.render('showAuthButton', {status: response.status});
+					self.view.render('newTodoVisibility', {status: response.status});
 					self._filter(true);
 				});
 			} else {
 				self.view.render('showAuthButton', {status: response.status});
+				self.view.render('newTodoVisibility', {status: response.status});
 			}
     });
 	};
