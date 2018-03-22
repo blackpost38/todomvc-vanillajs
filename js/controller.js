@@ -217,43 +217,43 @@
 		self._filter();
 	};
 
+	/**
+	 * Will call login Facebook API and update user id with response from it.
+	 * And then render todo items, input and log out button.
+	 */
 	Controller.prototype.login = function () {
 		var self = this;
 		FB.login(function(response) {
 			if (response.authResponse) {
 				console.log('Welcome!  Fetching your information.... ');
-				var status = response.status;
-				self.model.updateUserId(response.authResponse.userID, function () {
-					self.view.render('authContentVisibility', {status: status});
-					self._filter(true);
-				});
+				self._updateUserId(response.authResponse.userID, response.status);
 			} else {
 				console.log('User cancelled login or did not fully authorize.');
 			}
 		})
 	};
 
+	/**
+	 * Will call logout Facebook API and update user id with empty string.
+	 * And then render todo items, input and log out button.
+	 */
 	Controller.prototype.logout = function () {
 		var self = this;
 		FB.logout(function(response) {
 			console.log('user is now logged out.');
-			var status = response.status;
-			self.model.updateUserId('', function () {
-				self.view.render('authContentVisibility', {status: status});
-				self._filter(true);
-			});
+			self._updateUserId('', response.status);
 		});
 	};
 
+	/**
+	 * Will call getLoginStatus Facebook API and update user id with response from it.
+	 */
 	Controller.prototype.updateUserId = function () {
 		var self = this;
 		FB.getLoginStatus(function(response) {
 			var status = response.status;
 			if (response.authResponse) {
-				self.model.updateUserId(response.authResponse.userID, function () {
-					self.view.render('authContentVisibility', {status: status});
-					self._filter(true);
-				});
+				self._updateUserId(response.authResponse.userID, status);
 			} else {
 				self.view.render('authContentVisibility', {status: status});
 			}
@@ -313,6 +313,17 @@
 		this._filter();
 
 		this.view.render('setFilter', currentPage);
+	};
+
+	/**
+	 * Simply updates user id and then re-render UI
+	 * @param {object} response  response from Facebook API
+	 */
+	Controller.prototype._updateUserId = function (userId, status) {
+		self.model.updateUserId(userId, function () {
+			self.view.render('authContentVisibility', {status: status});
+			self._filter(true);
+		});
 	};
 
 	// Export to window

@@ -114,6 +114,12 @@
 		});
 	};
 
+	/**
+	 * updates user id
+	 * 
+	 * @param {string} userId The id of user
+	 * @param {function} callback The callback to fire when the update is complete.
+	 */
 	Model.prototype.updateUserId = function (userId, callback) {
 		this.storage.updateUserId(userId, callback);
 	};

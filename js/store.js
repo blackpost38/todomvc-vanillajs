@@ -139,10 +139,16 @@
 		callback.call(this, data[this._userId]);
 	};
 
+	/**
+	 * updates user id and creates a storage for user
+	 * 
+	 * @param {string} userId The id of user
+	 * @param {function} callback The callback to fire when the update is complete.
+	 */
 	Store.prototype.updateUserId = function (userId, callback) {
 		this._userId = userId;
 		var data = JSON.parse(localStorage[this._dbName]);
-		if (!data[this._userId]) {
+		if (!data[this._userId] && this._userId !== '') {
 			data[this._userId] = [];
 		}
 		localStorage[this._dbName] = JSON.stringify(data);

@@ -23,6 +23,9 @@
 	$on(window, 'load', setView);
 	$on(window, 'hashchange', setView);
 
+	/**
+	 * init and update user id to store when loading facebook sdk
+	 */
 	window.fbAsyncInit = function() {
     FB.init({
       appId      : '346242342538945',
