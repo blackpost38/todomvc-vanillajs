@@ -320,6 +320,7 @@
 	 * @param {object} response  response from Facebook API
 	 */
 	Controller.prototype._updateUserId = function (userId, status) {
+		var self = this;
 		self.model.updateUserId(userId, function () {
 			self.view.render('authContentVisibility', {status: status});
 			self._filter(true);
